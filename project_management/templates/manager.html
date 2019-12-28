@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Mangage Files</title>
+    <link rel="stylesheet" type="text/css"
+          href="https://fonts.googleapis.com/css?family=Satisfy|Bree+Serif|Candal|PT+Sans">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css' %}">
+    <!-- <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}"> -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-dark d-flex justify-content-between ">
+
+
+
+
+            <div>
+                <a  class=" btn btn-warning my-2 my-sm-0" href="{% url 'admin:index' %}">مدیریت پایگاه داده</a>
+
+                <a class="ml-2 btn btn-info my-2 my-sm-0" href="{% url 'index' %}">مشاهده وبسایت</a>
+
+            </div>
+
+
+        <a href=""><span class="navbar-brand mb-0 h1"><h1>پنل مدیریت وبسایت</h1></span></a>
+
+
+
+
+      </nav>
+      <div class="container">
+        <p></p>
+      </div>
+
+    {% for message in messages %}
+
+        {% if message.tags == 'success' %}
+        <div class="alert alert-success text-center">
+            <a class="close" href="#" data-dismiss="alert">×</a>
+
+            {{ message }}
+
+        </div>
+
+        {% elif  message.tags == 'error' %}
+
+                    <div class="alert alert-danger text-center">
+                        <a class="close" href="#" data-dismiss="alert">×</a>
+
+                        {{ message }}
+
+                    </div>
+        {% endif %}
+    {% endfor %}
+    <div class='container jumbotron'>
+
+        <h1 class = 'page-header text-center display-4'>اضافه کردن کاربر جدید</h1>
+        <!-- <div class='container text-center'> -->
+
+            <h5 class = 'page-header text-center'>برای اضافه کردن کاربر جدید فرم مربوط را از بین فرم های زیر دریافت کرده و پس از پر کردن فرم، آن را بارگزاری نمایید</h5>
+
+            <div class= 'd-flex justify-content-between mt-5 mb-3'>
+
+                <div class="  form-inline">
+
+                    <a class="mr-3 mb-3 btn btn-info" href="{% url 'fileManagement:download_form' name='add_student_form.xlsx'%}">دریافت فرم</a>
+                    <h5 >:فرم دانشجو</h5>
+                </div>
+
+                <div class=" form-inline">
+
+                    <a class="mr-3 mb-3 btn btn-info" href="{% url 'fileManagement:download_form' name='add_professor_form.xlsx'%}">دریافت فرم</a>
+                    <h5>:فرم استاد</h5>
+                </div>
+
+                <div class=" form-inline">
+                    <a class="mr-3 mb-3 btn btn-info" href="{% url 'fileManagement:download_form' name='add_industry_form.xlsx'%}">دریافت فرم</a>
+                    <h5>:فرم نماینده صنعت</h5>
+                    </div>
+
+            </div>
+
+        <!-- </div> -->
+
+        <h2 class = 'mt-5 mb-3 page-header text-center'>بارگزاری فرم</h2>
+        <div class='container d-flex justify-content-center'>
+        <form class="form-inline" action="" method="POST" enctype="multipart/form-data">
+
+            {% csrf_token %}
+            <div class="form-group">
+            <label for="file1"> انتخاب فایل </label>
+            <input class='form-control-file' type="file" id="file1" name="exl_file">
+            </div>
+
+
+                <label class="my-1 mr-2" for="inlineFormCustomSelectPref">نوع کاربر</label>
+                <select name='user_type' class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref">
+                  <option selected value="0">نوع کاربر را انتخاب کنید</option>
+                  <option value="1">دانشجو</option>
+                  <option value="2">استاد</option>
+                  <option value="3">نماینده صنعت</option>
+                </select>
+
+
+                <button name='upload_user' type="submit" class="btn btn-success my-1">بارگزاری</button>
+
+        </form>
+        </div>
+    </div>
+
+    <div class='container jumbotron'>
+
+        <h1 class = 'mb-5 page-header text-center display-4'>ایجاد نیم سال جدید</h1>
+        <div class='container d-flex justify-content-center'>
+        <form class="form-inline" action="" method="POST" enctype="multipart/form-data">
+
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="semester_name"> نام نیمسال</label>
+                <input type="text" name='semester_name' class="form-control" required="required">
+            </div>
+
+                <button name='add_Semester' type="submit" class="ml-3 btn btn-success my-1">ایجاد</button>
+
+        </form>
+        </div>
+    </div>
+
+    <div class='container jumbotron'>
+
+        <h1 class = 'page-header text-center display-4'>اضافه کردن دانشجویان ارائه دهنده به نیمسال</h1>
+        <div class='container text-center'>
+
+            <p class = 'page-header text-center'>برای اضافه کردن دانشجویان ارائه دهنده به نیمسال، فرم زیر را دریافت کرده و پس از پر کردن فرم، آن را بارگزاری نمایید</p>
+
+            <div class="container form-group">
+            <a class="btn btn-info" href="{% url 'fileManagement:download_form' name='add_student_to_semester_form.xlsx'%}">دریافت فرم</a>
+            </div>
+
+        </div>
+
+        <h2 class = 'mt-5 page-header text-center'>بارگزاری فرم</h2>
+        <div class='container d-flex justify-content-center'>
+        <form class="form-inline" action="" method="POST" enctype="multipart/form-data">
+
+            {% csrf_token %}
+            <div class="form-group">
+            <label for="file1"> انتخاب فایل </label>
+            <input class='form-control-file' type="file" id="file1" name="exl_file2">
+            </div>
+
+                <button name='add_student_to_semester' type="submit" class="btn btn-success my-1">بارگزاری</button>
+
+        </form>
+        </div>
+    </div>
+
+
+    <footer class="footer text-center">
+        <div class="footer-top">
+            <div class="row">
+                <div class="col-md-offset-3 col-md-12 text-center">
+                    <div class="widget">
+                        <h4 class="widget-title"></h4>
+                        <address>پاییز 98<br>دانشگاه اصفهان</address>
+                        <div class="social-list">
+                            <a href="#"><i class="fa fa-telegram" aria-hidden="true"></i></a>
+                        </div>
+                        <p class="copyright clear-float">
+                            ©  All Rights Reserved For GFYS
+                        <div class="credits">
+                            Designed by <a>GFYS</a>
+                        </div>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+</body>
+</html>

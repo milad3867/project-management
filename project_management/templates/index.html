@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PR_MA</title>
+    <meta name="description" content="Free Bootstrap Theme by BootstrapMade.com">
+    <meta name="keywords"
+          content="free website templates, free bootstrap themes, free template, free bootstrap, free website template">
+
+    <link rel="stylesheet" type="text/css"
+          href="https://fonts.googleapis.com/css?family=Satisfy|Bree+Serif|Candal|PT+Sans">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+
+</head>
+
+<body>
+<!--banner-->
+<section id="banner">
+    <div class="bg-color">
+        <header id="header">
+            <div class="container">
+                <div id="mySidenav" class="sidenav">
+                    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                    <a href="#about">صفحه اصلی</a>
+                    <a href="#event">ارتباط با مدیر</a>
+                    <a href="#menu-list">ارسال تیکت پشتیبانی</a>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'logout' %}">خروج</a>
+                    {% endif %}
+                </div>
+                <!-- Use any element to open the sidenav -->
+                <span onclick="openNav()" class="pull-right menu-icon">☰</span>
+            </div>
+        </header>
+        <div class="container">
+            <div class="row">
+                <div class="inner text-center">
+                    <h1 class="logo-name titr_text"> مدیریت پروژه های کارشناسی دانشگاه اصفهان</h1>
+                    <h2>گروه فناوری اطلاعات</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- / banner -->
+<!--about-->
+<section id="about" class="section-padding jumbotron">
+    <div class="container">
+        <div class="row">
+            {% if not user.is_authenticated %}
+            <div class="col-md-12 text-center marb-35">
+                <h1 class="header-h titr_text">ورود به حساب کاربری</h1>
+                {% for message in messages %}
+
+                    <div class="alert alert-danger">
+                        <a class="close" href="#" data-dismiss="alert">×</a>
+
+                        {{ message }}
+
+                    </div>
+            {% endfor %}
+                <!-------------------------------------------------------------------------------------------------------------->
+
+                <div class="modal-body">
+                    <form  method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <i class="fa fa-user"></i>
+                            <input type="text" name='username' class="form-control" placeholder="Username" required="required">
+                        </div>
+                        <div class="form-group">
+                            <i class="fa fa-lock"></i>
+                            <input type="password" name='password' class="form-control" placeholder="Password" required="required">
+                        </div>
+                        <div class="form-group">
+                            <input name='log_in' type="submit" class="btn btn-primary btn-block btn-lg" value="ورود">
+                        </div>
+                    </form>
+
+                </div>
+                {% else %}
+                <div class="col-md-12 text-center marb-35">
+                    <h1 class="header-h titr_text">{{user.first_name}} {{user.last_name}} خوش آمدید</h1>
+
+                    {% if user.is_authenticated %}
+                    <a class='btn btn-danger btn-lg'  href="{% url 'logout' %}">خروج از حساب کاربری</a>
+                    {% endif %}
+
+                    {% if user.is_superuser %}
+                    <a class='btn btn-info btn-lg'  href="manager/">پنل مدیریت وبسایت</a>
+                    {% endif %}
+
+
+                    {% for sem in semesters %}
+
+
+                        {% for student in sem.students.all %}
+
+                            {% if student.user == user %}
+                            <a class='btn btn-info btn-lg' href="media/upload/{{student.id}}"> بارگزاری فایل های پروژه</a>
+                            {% endif %}
+
+                        {% endfor %}
+
+                    {% endfor %}
+
+
+                {% endif %}
+            </div>
+            <div class="col-md-1"></div>
+        </div>
+    </div>
+</section>
+<!--/about-->
+<!-- menu -->
+<section id="menu-list" class="section-padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center marb-35">
+                <h1 class="header-h">لیست ارائه های پوستری نیمسال {{selected}} </h1>
+            </div>
+
+            {% if user.is_authenticated %}
+
+                {% for message in messages %}
+
+                    {% if message.tags == 'success' %}
+                    <div class="alert alert-success text-center">
+                        <a class="close" href="#" data-dismiss="alert">×</a>
+
+                        {{ message }}
+
+                    </div>
+
+                    {% elif  message.tags == 'error' %}
+
+                                <div class="alert alert-danger text-center">
+                                    <a class="close" href="#" data-dismiss="alert">×</a>
+
+                                    {{ message }}
+
+                                </div>
+                    {% endif %}
+                {% endfor %}
+
+            {% endif %}
+
+
+            <div class="container text-center d-flex justify-content-center">
+                <form class="form-inline" action="" method="POST">
+
+                    {% csrf_token %}
+
+                        <label class="my-1 mr-2" for="inlineFormCustomSelectPref">نیمسال</label>
+                        <select name='semester_name' class="custom-select my-1 mr-sm-2 " id="inlineFormCustomSelectPref">
+                        <option selected value="{{ selected }}">{{ selected }}</option>
+
+                            {% for semester in semesters %}
+
+                                {% if semester != selected %}
+                                    <option value="{{semester}}">{{semester}}</option>
+                                {% endif %}
+
+                            {% endfor %}
+
+                        </select>
+
+
+                        <button name='change' type="submit" class="btn btn-success my-1">تغییر</button>
+
+                    </form>
+
+            </div>
+
+            <div id="menu-wrapper">
+
+
+                {% for student in Semester_students %}
+
+                    <div class="breakfast menu-restaurant">
+                        <span class="clearfix">
+                            <div class="container">
+                            <p  class="menu-title">{{ student.research_subject }}</p>
+                        </div>
+
+                          <span style="left: 166px; right: 44px;" class="menu-line"></span>
+                          <span class="menu-price">
+                            {% if student.pdf %}
+                            <a class='btn btn-danger' href="{{student.pdf.url}}">PDF</a>
+                    {% else %}
+                    <a href="#" class="btn btn-danger disabled" tabindex="-1" role="button" aria-disabled="true">PDF</a>
+                    {% endif %}
+                    {% if student.doc %}
+                            <a class='btn btn-primary' href="{{student.doc.url}}">DOCX</a>
+                    {% else %}
+                            <a href="#" class="btn btn-primary disabled" tabindex="-1" role="button" aria-disabled="true">DOCX</a>
+                    {% endif %}
+                    </span>
+                        </span>
+                        <div class='container'>
+                        <span class="menu-subtitle">{{ student }}</span>
+                    </div>
+
+
+                    {% if selected.active %}
+
+                        {% if user.is_authenticated %}
+
+                        {% if not user.is_superuser  %}
+
+                    <div class='mb-5 container'>
+                    <form class="form-inline" method="POST">
+                        {% csrf_token %}
+                        <div class="form-group mb-2">
+                          <input name='grade' type="text" class="form-control-plaintext" placeholder="به این پروژه نمره بدهید">
+                          <input name='to' type="hidden" class="form-control-plaintext" value="{{student.id}}">
+                        </div>
+                        <button type="submit" name='submit_grade' class="btn btn-primary mb-2">ثبت نمره</button>
+                      </form>
+                    </div>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+
+                        <div>
+                            <p></p>
+                            {% if user.username == student.guid_instructor.user.username %}
+                            <div class="alert alert-info" role="alert">
+                                <p class="text-muted text-center">شما استاد راهنمای این پروژه هستید</p>
+                              </div>
+
+
+                            {% endif %}
+
+                        </div>
+
+
+                    </div>
+                {% endfor %}
+
+            </div>
+
+        </div>
+    </div>
+</section>
+<!--/ menu -->
+<!-- event -->
+<section id="event">
+    <div class="bg-color" class="section-padding">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 text-center" style="padding:60px;">
+                    <h1 class="header-h">سند هدایت کاربران</h1>
+                </div>
+                <div class="col-md-offset-12 center-block text-center">
+                    <div class="item active left ">
+                        <div class="col-md-6 col-sm-6 details-text">
+                            <div>
+                                <h2 class="text-center">راهنمای استفاده از سایت</h2>
+                                <p class="text-center">برای اطلاع از نحوه بارگزاری پروژه و پاسخگویی به سوالات، فایل زیر
+                                    را بارگیری نمایید.</p>
+
+                                <a class="btn btn-info btn-read-more center-block" href="media/download/guide/">بارگیری
+                                    سند</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--/ event -->
+<!-- footer -->
+<footer class="footer text-center">
+    <div class="footer-top">
+        <div class="row">
+            <div class="col-md-offset-3 col-md-6 text-center">
+                <div class="widget">
+                    <h4 class="widget-title"></h4>
+                    <address>پاییز 98<br>دانشگاه اصفهان</address>
+                    <div class="social-list">
+                        <a href="#"><i class="fa fa-telegram" aria-hidden="true"></i></a>
+                    </div>
+                    <p class="copyright clear-float">
+                        ©  All Rights Reserved For GFYS
+                    <div class="credits">
+                        Designed by <a>GFYS</a>
+                    </div>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- / footer -->
+
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/jquery.easing.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/custom.js' %}"></script>
+<script src="{% static 'contactform/contactform.js' %}"></script>
+
+</body>
+
+</html>
