@@ -125,6 +125,7 @@
                 <h1 class="header-h">لیست ارائه های پوستری نیمسال {{selected}} </h1>
             </div>
 
+            <div class="col-md-12 text-center marb-35">
             {% if user.is_authenticated %}
 
                 {% for message in messages %}
@@ -149,6 +150,7 @@
                 {% endfor %}
 
             {% endif %}
+        </div>
 
 
             <div class="container text-center d-flex justify-content-center">
@@ -206,18 +208,44 @@
                         <span class="menu-subtitle">{{ student }}</span>
                     </div>
 
+                    
+                        {% if selected.active %}
 
-                    {% if selected.active %}
+                            {% if user.is_authenticated %}
 
-                        {% if user.is_authenticated %}
+                            {% if not user.is_superuser  %}
 
-                        {% if not user.is_superuser  %}
 
+                    <div class='container'>
+                            {% if student.user.grades.all %}
+
+                                {% for grade in student.user.grades.all %}
+
+                                    {% if grade.given_by == user %}
+                                        <p>{{grade.value}} :نمره شما به این پروژه</p>
+
+                                    {% else %}
+                                        <p>شما هنوز به این پروژه نمره نداده اید</p>
+
+                                    {% endif %}
+
+
+                                {% endfor %}
+
+                            {% else %}
+                                        <p>شما هنوز به این پروژه نمره نداده اید</p>
+
+                            {% endif %}
+
+                    </div>
+                        
                     <div class='mb-5 container'>
                     <form class="form-inline" method="POST">
                         {% csrf_token %}
+
                         <div class="form-group mb-2">
-                          <input name='grade' type="text" class="form-control-plaintext" placeholder="به این پروژه نمره بدهید">
+
+                          <input name='grade' type="text"  class="form-control-plaintext" placeholder="به این پروژه نمره بدهید">
                           <input name='to' type="hidden" class="form-control-plaintext" value="{{student.id}}">
                         </div>
                         <button type="submit" name='submit_grade' class="btn btn-primary mb-2">ثبت نمره</button>

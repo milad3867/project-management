@@ -303,6 +303,11 @@ def index(request):
                         grade_type = 'by professor'
 
                     grade_value = request.POST['grade']
+
+                    if not 0 <= float(grade_value) <= 20:
+                        messages.error(request, 'لطفا برای نمره یک عدد بین 0 تا 20 انتخاب کنید')
+                        return HttpResponseRedirect(request.path_info)
+
                     grade, created = Grade.objects.update_or_create(
                         grade_type=grade_type, given_by=given_by_user,
                         given_to=receiver_student.user,
