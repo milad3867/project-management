@@ -332,32 +332,56 @@ def index(request):
                                   'grade_type': grade_type},)
 
                     for student in Semester_students:
-                        total = 0
+
+                        s_grade, p_grade, gi_grade, i_grade = 0, 0, 0, 0
+                        s_grade_count, p_grade_count, gi_grade_count, i_grade_count = 0, 0, 0, 0
                         check = False
                         for grade in student.user.grades.all():
 
-                            val = grade.value
+                            # val = grade.value
                             if grade.grade_type == 'by student':
                                 check = True
 
-                                val *= 3
+                                s_grade += grade.value
+                                s_grade_count += 1
 
                             elif grade.grade_type == 'by professor':
                                 check = True
 
-                                val *= 6
+                                p_grade += grade.value
+                                p_grade_count += 1
+
                             elif grade.grade_type == 'by guid_instructor':
                                 check = True
 
-                                val *= 8
+                                gi_grade += grade.value
+                                gi_grade_count += 1
+
                             elif grade.grade_type == 'by industry':
                                 check = True
 
-                                val *= 2
+                                i_grade += grade.value
+                                i_grade_count += 1
 
-                            total += val
+                        if s_grade_count > 0:
+                            check = True
+                            s_grade /= s_grade_count
+
+                        if p_grade_count > 0:
+                            check = True
+                            p_grade /= p_grade_count
+
+                        if gi_grade_count > 0:
+                            check = True
+                            gi_grade /= gi_grade_count
+
+                        if i_grade_count > 0:
+                            check = True
+                            i_grade /= i_grade_count
 
                         if check:
+
+                            total = (s_grade*3) + (p_grade*7) + (gi_grade*8) + (i_grade*2)
 
                             student.total_grade = total/20
                             student.save()
