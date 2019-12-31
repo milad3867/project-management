@@ -44,6 +44,8 @@ class Student(models.Model):
                                         on_delete=models.SET_NULL,
                                         blank=True, null=True)
 
+    total_grade = models.FloatField(blank=True, null=True)
+
     def __str__(self):
         return (self.user.first_name + ' ' +  # pylint: disable=no-member
                 self.user.last_name)  # pylint: disable=no-member
@@ -66,6 +68,7 @@ class Grade(models.Model):
     GRADE_TYPE_CHOICES = [
         ('by student', 'by student'),
         ('by professor', 'by professor'),
+        ('by guid_instructor', 'by guid_instructor'),
         ('by industry', 'by industry'),
     ]
     value = models.FloatField(blank=False)
@@ -85,3 +88,10 @@ class Grade(models.Model):
                 self.given_by.first_name + ' ' + self.given_by.last_name +
                 ' to ' +
                 self.given_to.first_name + ' ' + self.given_to.last_name)
+
+
+class Notification(models.Model):
+    text = models.CharField(max_length=500, blank=False)
+
+    def __str__(self):
+        return self.text

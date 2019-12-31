@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>صفحه کاربری</title>
+    <link rel="stylesheet" type="text/css"
+          href="https://fonts.googleapis.com/css?family=Satisfy|Bree+Serif|Candal|PT+Sans">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style2.css' %}">
+</head>
+
+<body>
+<!--banner-->
+<section id="banner">
+    <div class="bg-color">
+        <div class="container">
+            <div class="row">
+                <div class="inner text-center">
+                    <h1 class="logo-name titr_text"> مدیریت پروژه های کارشناسی دانشگاه اصفهان</h1>
+                    <h2>گروه فناوری اطلاعات</h2>
+                    <p>پنل مدیریت اطلاعیه ها</p>
+                </div>
+            </div>
+            <div class="center-block text-center">
+
+
+                {% for notification in notifications %}
+                    <div class="alert alert-info" style="direction: rtl; font-size: 1vw">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        {{notification}}
+                </div>
+                {% endfor %}
+
+                <h1 class="logo-name titr_text"> مدیریت پروژه های کارشناسی دانشگاه اصفهان</h1>
+
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <input type="text" name="new_not" placeholder="متن اطلاعیه جدید">
+                    <input type="submit" value="">
+                </form>
+
+                <!-- <a href="#" class="btn btn-info btn-lg">
+                    <span class="glyphicon glyphicon-plus"></span> اطلاعیه جدید
+
+                </a> -->
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/jquery.easing.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/custom.js' %}"></script>
+<script src="{% static 'contactform/contactform.js' %}"></script>
+
+</body>
+
+</html>

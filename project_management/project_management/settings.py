@@ -28,7 +28,8 @@ SECRET_KEY = '7ma)#ghkke)vr$pjl(9nmsn^+8cis@sii1%tyjz87lr3bpt54c'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['pmproject.pythonanywhere.com',
+                 '127.0.0.1']
 
 
 # Application definition

@@ -208,42 +208,36 @@
                         <span class="menu-subtitle">{{ student }}</span>
                     </div>
 
-                    
+
                         {% if selected.active %}
 
                             {% if user.is_authenticated %}
 
                             {% if not user.is_superuser  %}
 
+                    <div class='mb-5 container'>
+                    <form class="form-inline" method="POST">
+                        {% csrf_token %}
 
-                    <div class='container'>
-                            {% if student.user.grades.all %}
+                        <div class="form-group mb-2">
+
+                            <!--<div class='container'>-->
 
                                 {% for grade in student.user.grades.all %}
 
                                     {% if grade.given_by == user %}
-                                        <p>{{grade.value}} :نمره شما به این پروژه</p>
+                                        <label for='grade'>{{grade.value}} :نمره قبلی </label>
 
-                                    {% else %}
-                                        <p>شما هنوز به این پروژه نمره نداده اید</p>
+
 
                                     {% endif %}
 
 
                                 {% endfor %}
 
-                            {% else %}
-                                        <p>شما هنوز به این پروژه نمره نداده اید</p>
 
-                            {% endif %}
 
-                    </div>
-                        
-                    <div class='mb-5 container'>
-                    <form class="form-inline" method="POST">
-                        {% csrf_token %}
-
-                        <div class="form-group mb-2">
+                    <!--</div>-->
 
                           <input name='grade' type="text"  class="form-control-plaintext" placeholder="به این پروژه نمره بدهید">
                           <input name='to' type="hidden" class="form-control-plaintext" value="{{student.id}}">
@@ -260,6 +254,8 @@
                             {% if user.username == student.guid_instructor.user.username %}
                             <div class="alert alert-info" role="alert">
                                 <p class="text-muted text-center">شما استاد راهنمای این پروژه هستید</p>
+                                <p class="text-muted text-center">{{student.total_grade}}:نمره کل این پروژه با احتساب ضرایب</p>
+
                               </div>
 
 
@@ -273,6 +269,24 @@
 
             </div>
 
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="inner text-center">
+                <h1 class="logo-name titr_text">اطلاعیه ها</h1>
+
+            </div>
+        </div>
+        <div class="center-block text-center">
+
+
+            {% for notification in notifications %}
+                <div class="alert alert-info" style="direction: rtl; font-size: 1vw">
+                
+                    {{notification}}
+            </div>
+            {% endfor %}
         </div>
     </div>
 </section>

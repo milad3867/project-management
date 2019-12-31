@@ -12,6 +12,7 @@ from .models import (User,
                      Student,
                      Semester,
                      Professor,
+                     Notification,
                      Industry)
 
 
@@ -241,7 +242,16 @@ def index(request):
     semesters = Semester.objects.all().order_by('-created_date')
 
     semester = semesters[0]
-    context['Semester_students'] = semester.students.all()
+
+    Semester_students = semester.students.all()
+    context['Semester_students'] = Semester_students
+
+
+
+            # else:
+            #     grade.value *= 1
+
+    context['notifications'] = Notification.objects.all()
     context['selected'] = semester
     context['semesters'] = semesters
 
@@ -282,7 +292,7 @@ def index(request):
 
             context['Semester_students'] = semester.students.all()
             context['selected'] = semester
-            context['semesters'] = semesters
+
             return render(request, template, context)
 
         elif 'submit_grade' in request.POST:
@@ -300,7 +310,14 @@ def index(request):
                         grade_type = 'by industry'
 
                     elif Professor.objects.filter(user=given_by_user).count() == 1:
-                        grade_type = 'by professor'
+
+                        prof = Professor.objects.get(user=given_by_user)
+
+                        if prof == receiver_student.guid_instructor:
+                            grade_type = 'by guid_instructor'
+
+                        else:
+                            grade_type = 'by professor'
 
                     grade_value = request.POST['grade']
 
@@ -313,6 +330,41 @@ def index(request):
                         given_to=receiver_student.user,
                         defaults={'value': grade_value,
                                   'grade_type': grade_type},)
+
+                    for student in Semester_students:
+                        total = 0
+                        check = False
+                        for grade in student.user.grades.all():
+
+                            val = grade.value
+                            if grade.grade_type == 'by student':
+                                check = True
+
+                                val *= 3
+
+                            elif grade.grade_type == 'by professor':
+                                check = True
+
+                                val *= 6
+                            elif grade.grade_type == 'by guid_instructor':
+                                check = True
+
+                                val *= 8
+                            elif grade.grade_type == 'by industry':
+                                check = True
+
+                                val *= 2
+
+                            total += val
+
+                        if check:
+
+                            student.total_grade = total/20
+                            student.save()
+
+                        else:
+                            student.total_grade = None
+                            student.save()
 
                     messages.success(request, 'نمره شما با موفقیت ثبت شد')
                     return HttpResponseRedirect(request.path_info)
