@@ -331,64 +331,58 @@ def index(request):
                         defaults={'value': grade_value,
                                   'grade_type': grade_type},)
 
-                    for student in Semester_students:
+                    s_grade, p_grade, gi_grade, i_grade = 0, 0, 0, 0
+                    s_grade_count, p_grade_count, gi_grade_count, i_grade_count = 0, 0, 0, 0
+                    check = False
+                    for grade in receiver_student.user.grades.all():
 
-                        s_grade, p_grade, gi_grade, i_grade = 0, 0, 0, 0
-                        s_grade_count, p_grade_count, gi_grade_count, i_grade_count = 0, 0, 0, 0
-                        check = False
-                        for grade in student.user.grades.all():
-
-                            # val = grade.value
-                            if grade.grade_type == 'by student':
-                                check = True
-
-                                s_grade += grade.value
-                                s_grade_count += 1
-
-                            elif grade.grade_type == 'by professor':
-                                check = True
-
-                                p_grade += grade.value
-                                p_grade_count += 1
-
-                            elif grade.grade_type == 'by guid_instructor':
-                                check = True
-
-                                gi_grade += grade.value
-                                gi_grade_count += 1
-
-                            elif grade.grade_type == 'by industry':
-                                check = True
-
-                                i_grade += grade.value
-                                i_grade_count += 1
-
-                        if s_grade_count > 0:
+                        # val = grade.value
+                        if grade.grade_type == 'by student':
                             check = True
-                            s_grade /= s_grade_count
 
-                        if p_grade_count > 0:
+                            s_grade += grade.value
+                            s_grade_count += 1
+
+                        elif grade.grade_type == 'by professor':
                             check = True
-                            p_grade /= p_grade_count
 
-                        if gi_grade_count > 0:
+                            p_grade += grade.value
+                            p_grade_count += 1
+
+                        elif grade.grade_type == 'by guid_instructor':
                             check = True
-                            gi_grade /= gi_grade_count
 
-                        if i_grade_count > 0:
+                            gi_grade += grade.value
+                            gi_grade_count += 1
+
+                        elif grade.grade_type == 'by industry':
                             check = True
-                            i_grade /= i_grade_count
 
-                        if check:
+                            i_grade += grade.value
+                            i_grade_count += 1
 
-                            total = (s_grade*3) + (p_grade*7) + (gi_grade*8) + (i_grade*2)
+                    if s_grade_count > 0:
+                        check = True
+                        s_grade /= s_grade_count
 
-                            student.total_grade = total/20
-                            student.save()
+                    if p_grade_count > 0:
+                        check = True
+                        p_grade /= p_grade_count
 
-                        else:
-                            student.total_grade = None
-                            student.save()
+                    if gi_grade_count > 0:
+                        check = True
+                        gi_grade /= gi_grade_count
+
+                    if i_grade_count > 0:
+                        check = True
+                        i_grade /= i_grade_count
+
+                    if check:
+
+                        total = (s_grade*3) + (p_grade*7) + (gi_grade*8) + (i_grade*2)
+
+                        receiver_student.total_grade = total/20
+                        receiver_student.save()
 
                     messages.success(request, 'نمره شما با موفقیت ثبت شد')
                     return HttpResponseRedirect(request.path_info)

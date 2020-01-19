@@ -27,8 +27,8 @@
                 <div id="mySidenav" class="sidenav">
                     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
                     <a href="#about">صفحه اصلی</a>
-                    <a href="#event">ارتباط با مدیر</a>
-                    <a href="#menu-list">ارسال تیکت پشتیبانی</a>
+                    <a href="#menu-list">ارائه ها</a>
+                    <a href="#event">راهنمای سایت</a>
                     {% if user.is_authenticated %}
                     <a href="{% url 'logout' %}">خروج</a>
                     {% endif %}
@@ -95,20 +95,9 @@
                     <a class='btn btn-info btn-lg'  href="manager/">پنل مدیریت وبسایت</a>
                     {% endif %}
 
-
-                    {% for sem in semesters %}
-
-
-                        {% for student in sem.students.all %}
-
-                            {% if student.user == user %}
-                            <a class='btn btn-info btn-lg' href="media/upload/{{student.id}}"> بارگزاری فایل های پروژه</a>
-                            {% endif %}
-
-                        {% endfor %}
-
-                    {% endfor %}
-
+                        {% if user.student %}
+                            <a class='btn btn-info btn-lg' href="media/upload/{{user.student.id}}"> بارگزاری فایل های پروژه</a>
+                        {% endif %}
 
                 {% endif %}
             </div>
@@ -283,7 +272,7 @@
 
             {% for notification in notifications %}
                 <div class="alert alert-info" style="direction: rtl; font-size: 1vw">
-                
+
                     {{notification}}
             </div>
             {% endfor %}
