@@ -80,7 +80,7 @@ def manager(request):
                             username=row[0],
                             defaults={'first_name': row[1], 'last_name': row[2]},)
 
-                        password = User.objects.make_random_password()
+                        password = User.objects.make_random_password(length=8)
 
                         user.set_password(password)
                         user.save()
@@ -114,7 +114,7 @@ def manager(request):
                             username=row[0],
                             defaults={'first_name': row[1], 'last_name': row[2]},)
 
-                        password = User.objects.make_random_password()
+                        password = User.objects.make_random_password(length=8)
                         user.set_password(password)
                         user.save()
 
@@ -148,7 +148,7 @@ def manager(request):
                             username=row[0],
                             defaults={'first_name': row[1], 'last_name': row[2]},)
 
-                        password = User.objects.make_random_password()
+                        password = User.objects.make_random_password(length=8)
                         user.set_password(password)
                         user.save()
 
