@@ -1,11 +1,13 @@
 from django.shortcuts import render
 from django.views.generic import ListView
 from django.urls import reverse
-from .forms import AddSemesterForm
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.conf import settings
+from django.core.files.storage import default_storage
+import os
 import openpyxl
 from .models import (User,
                      Grade,
@@ -34,13 +36,12 @@ def manager(request):
 
         # GET request returns the value of the data with the specified key.
         if request.method == "GET":
-            form = AddSemesterForm()
+
             context = {}
             return render(request, template, context)
 
         if 'upload_user' in request.POST:
 
-            form = AddSemesterForm()
             context = {}
 
             exl_file = request.FILES.get('exl_file')
@@ -165,15 +166,14 @@ def manager(request):
             if created:
 
                 messages.success(request, 'عملیات انجام شد')
-                form = AddSemesterForm()
+
                 context = {}
                 return render(request, template, context)
 
             else:
 
                 messages.error(request,
-                            'نیمسالی با این نام قبلا ایجاد شده است')
-                form = AddSemesterForm()
+                               'نیمسالی با این نام قبلا ایجاد شده است')
                 context = {}
                 return render(request, template, context)
 
@@ -218,6 +218,23 @@ def manager(request):
             return render(request, template, context)
 
             return render(request, template, context)
+
+        elif 'add_advertisement' in request.POST:
+            ad1 = request.FILES.get('ad1')
+            ad2 = request.FILES.get('ad2')
+
+        if ad1:
+            save_path = os.path.join(settings.MEDIA_ROOT, 'advertisement','advertisement1.png')
+            default_storage.delete(save_path)
+            path = default_storage.save(save_path, request.FILES['ad1'])
+
+        if ad2:
+            save_path = os.path.join(settings.MEDIA_ROOT, 'advertisement','advertisement2.png')
+            default_storage.delete(save_path)
+            path = default_storage.save(save_path, request.FILES['ad2'])
+
+        context = {}
+        return render(request, template, context)
 
     else:
         context = {}

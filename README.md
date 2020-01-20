@@ -51,4 +51,3 @@ False
 project_management\
 با دستور زیر میتوانید  کاربر ادمین ایجاد کنید
 python manage.py createsuperuser
-

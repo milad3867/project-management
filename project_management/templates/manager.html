@@ -94,8 +94,8 @@
 
             {% csrf_token %}
             <div class="form-group">
-            <label for="file1"> انتخاب فایل </label>
-            <input class='form-control-file' type="file" id="file1" name="exl_file">
+            <label for="file2"> انتخاب فایل </label>
+            <input class='form-control-file' type="file" id="file2" name="exl_file">
             </div>
 
 
@@ -156,6 +156,26 @@
             </div>
 
                 <button name='add_student_to_semester' type="submit" class="btn btn-success my-1">بارگزاری</button>
+
+        </form>
+        </div>
+    </div>
+
+    <div class='container jumbotron'>
+
+        <h1 class = 'mb-5 page-header text-center display-4'>مدیریت آگهی ها</h1>
+        <div class='container d-flex justify-content-center'>
+        <form class="form-inline" action="" method="POST" enctype="multipart/form-data">
+
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="file3"> آگهی اول </label>
+                <input class='form-control-file' type="file" id="file3" name="ad1">
+                <label for="file3"> آگهی دوم </label>
+                <input class='form-control-file' type="file" id="file3" name="ad2">
+            </div>
+
+                <button name='add_advertisement' type="submit" class="ml-3 btn btn-success my-1">ایجاد</button>
 
         </form>
         </div>
