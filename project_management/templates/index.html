@@ -57,13 +57,24 @@
                 <h1 class="header-h titr_text">ورود به حساب کاربری</h1>
                 {% for message in messages %}
 
-                    <div class="alert alert-danger">
+                    {% if message.tags == 'success' %}
+                    <div class="alert alert-success text-center">
                         <a class="close" href="#" data-dismiss="alert">×</a>
 
                         {{ message }}
 
                     </div>
-            {% endfor %}
+
+                    {% elif  message.tags == 'error' %}
+
+                                <div class="alert alert-danger text-center">
+                                    <a class="close" href="#" data-dismiss="alert">×</a>
+
+                                    {{ message }}
+
+                                </div>
+                    {% endif %}
+                {% endfor %}
                 <!-------------------------------------------------------------------------------------------------------------->
 
                 <div class="modal-body">
@@ -74,8 +85,11 @@
                             <input type="text" name='username' class="form-control" placeholder="Username" required="required">
                         </div>
                         <div class="form-group">
+                            <input name='generate_pass' type="submit" class="btn btn-primary btn-block btn-lg" value="ایجاد و ارسال رمز عبور جدید">
+                        </div>
+                        <div class="form-group">
                             <i class="fa fa-lock"></i>
-                            <input type="password" name='password' class="form-control" placeholder="Password" required="required">
+                            <input type="password" name='password' class="form-control" placeholder="Password">
                         </div>
                         <div class="form-group">
                             <input name='log_in' type="submit" class="btn btn-primary btn-block btn-lg" value="ورود">

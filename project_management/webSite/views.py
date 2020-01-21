@@ -4,10 +4,12 @@ from django.urls import reverse
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import never_cache
 from django.contrib import messages
 from django.conf import settings
 from django.core.files.storage import default_storage
 import os
+import requests
 import openpyxl
 from .models import (User,
                      Grade,
@@ -223,18 +225,18 @@ def manager(request):
             ad1 = request.FILES.get('ad1')
             ad2 = request.FILES.get('ad2')
 
-        if ad1:
-            save_path = os.path.join(settings.MEDIA_ROOT, 'advertisement','advertisement1.png')
-            default_storage.delete(save_path)
-            path = default_storage.save(save_path, request.FILES['ad1'])
+            if ad1:
+                save_path = os.path.join(settings.MEDIA_ROOT, 'advertisement','advertisement1.png')
+                default_storage.delete(save_path)
+                path = default_storage.save(save_path, request.FILES['ad1'])
 
-        if ad2:
-            save_path = os.path.join(settings.MEDIA_ROOT, 'advertisement','advertisement2.png')
-            default_storage.delete(save_path)
-            path = default_storage.save(save_path, request.FILES['ad2'])
+            if ad2:
+                save_path = os.path.join(settings.MEDIA_ROOT, 'advertisement','advertisement2.png')
+                default_storage.delete(save_path)
+                path = default_storage.save(save_path, request.FILES['ad2'])
 
-        context = {}
-        return render(request, template, context)
+            context = {}
+            return render(request, template, context)
 
     else:
         context = {}
@@ -276,11 +278,43 @@ def index(request):
     #  the following method will be called
     if request.method == 'POST':
 
+        if 'generate_pass' in request.POST:
+
+            # Get data from username and password fields of the form
+            username = request.POST.get('username')
+            # password = request.POST.get('password')
+            user = User.objects.get(username=username)
+
+            created_password = User.objects.make_random_password(length=8)
+            print(created_password)
+            user.set_password(created_password)
+            user.save()
+
+            url = "http://rest.payamak-panel.com/api/SendSMS/SendSMS"
+            #  headers = {'content-type': 'application/soap+xml'}
+            headers = {'content-type': 'application/x-www-form-urlencoded',
+                    'cache-control': 'no-cache'}
+
+            body = {'username': 'Enter api username here',
+                    'password': 'Enter api password here',
+                    'text': 'رمز عبور جدید سامانه مدیریت پروژه:' + str(created_password),
+                    'to': '9033296236',
+                    'isflash': 'false'}
+
+            response = requests.post(url, data=body, headers=headers)
+            print(response.content)
+
+            messages.success(request,
+                               'رمز عبور به تلفن همراه شما ارسال شد')
+
+            return HttpResponseRedirect(request.path_info)
+
         if 'log_in' in request.POST:
 
             # Get data from username and password fields of the form
             username = request.POST.get('username')
             password = request.POST.get('password')
+
 
             # Check username and password for authentication
             # Password are hashed using argon2 algorithm
