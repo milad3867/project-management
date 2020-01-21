@@ -295,10 +295,10 @@ def index(request):
             headers = {'content-type': 'application/x-www-form-urlencoded',
                     'cache-control': 'no-cache'}
 
-            body = {'username': 'Enter api username here',
-                    'password': 'Enter api password here',
+            body = {'username': '09132294339',
+                    'password': '9697',
                     'text': 'رمز عبور جدید سامانه مدیریت پروژه:' + str(created_password),
-                    'to': '9033296236',
+                    'to': '',
                     'isflash': 'false'}
 
             response = requests.post(url, data=body, headers=headers)
