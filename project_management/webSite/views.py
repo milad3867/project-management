@@ -280,32 +280,41 @@ def index(request):
 
         if 'generate_pass' in request.POST:
 
-            # Get data from username and password fields of the form
             username = request.POST.get('username')
-            # password = request.POST.get('password')
             user = User.objects.get(username=username)
 
-            created_password = User.objects.make_random_password(length=8)
-            print(created_password)
-            user.set_password(created_password)
-            user.save()
+            if not user.is_superuser:
 
-            url = "http://rest.payamak-panel.com/api/SendSMS/SendSMS"
-            #  headers = {'content-type': 'application/soap+xml'}
-            headers = {'content-type': 'application/x-www-form-urlencoded',
-                    'cache-control': 'no-cache'}
+                created_password = User.objects.make_random_password(length=8)
+                print(created_password)
+                user.set_password(created_password)
+                user.save()
 
-            body = {'username': 'api username',
-                    'password': 'api password',
-                    'text': 'رمز عبور جدید سامانه مدیریت پروژه:' + str(created_password),
-                    'to': '',
-                    'isflash': 'false'}
+                if Student.objects.filter(user=user).count() == 1:
+                    dest = str(user.student.phone_number)
 
-            response = requests.post(url, data=body, headers=headers)
-            print(response.content)
+                elif Professor.objects.filter(user=user).count() == 1:
+                    dest = str(user.professor.phone_number)
 
-            messages.success(request,
-                               'رمز عبور به تلفن همراه شما ارسال شد')
+                elif Industry.objects.filter(user=user).count() == 1:
+                    dest = str(user.industry.phone_number)
+
+                url = "http://rest.payamak-panel.com/api/SendSMS/SendSMS"
+                #  headers = {'content-type': 'application/soap+xml'}
+                headers = {'content-type': 'application/x-www-form-urlencoded',
+                        'cache-control': 'no-cache'}
+
+                body = {'username': 'api username',
+                        'password': 'api password',
+                        'text': 'رمز عبور جدید سامانه مدیریت پروژه:' + str(created_password),
+                        'to': dest,
+                        'isflash': 'false'}
+
+                response = requests.post(url, data=body, headers=headers)
+                print(response.content)
+
+                messages.success(request,
+                                'رمز عبور به تلفن همراه شما ارسال شد')
 
             return HttpResponseRedirect(request.path_info)
 
