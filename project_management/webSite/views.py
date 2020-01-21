@@ -295,8 +295,8 @@ def index(request):
             headers = {'content-type': 'application/x-www-form-urlencoded',
                     'cache-control': 'no-cache'}
 
-            body = {'username': '09132294339',
-                    'password': '9697',
+            body = {'username': 'api username',
+                    'password': 'api password',
                     'text': 'رمز عبور جدید سامانه مدیریت پروژه:' + str(created_password),
                     'to': '',
                     'isflash': 'false'}
