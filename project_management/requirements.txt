@@ -1,10 +1,13 @@
 argon2-cffi==19.2.0
 astroid==2.3.3
 bcrypt==3.1.7
+certifi==2019.11.28
 cffi==1.13.2
+chardet==3.0.4
 colorama==0.4.3
 Django==2.2.5
 et-xmlfile==1.0.1
+idna==2.8
 isort==4.3.21
 jdcal==1.4.1
 lazy-object-proxy==1.4.3
@@ -12,8 +15,12 @@ mccabe==0.6.1
 openpyxl==2.5.1
 pycodestyle==2.5.0
 pycparser==2.19
+pydot==1.4.1
 pylint==2.4.4
+pyparsing==2.4.6
 pytz==2019.3
+requests==2.22.0
 six==1.13.0
 sqlparse==0.3.0
+urllib3==1.25.7
 wrapt==1.11.2
