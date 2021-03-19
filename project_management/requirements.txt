@@ -5,7 +5,7 @@ certifi==2019.11.28
 cffi==1.13.2
 chardet==3.0.4
 colorama==0.4.3
-Django==2.2.5
+Django==2.2.18
 et-xmlfile==1.0.1
 idna==2.8
 isort==4.3.21
